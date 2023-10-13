@@ -41,6 +41,7 @@ function preprocessOneTimeRecursive(schema: JsonSchemaType | undefined, schemaPa
   induceTitles(schema);
 
   convertConstToEnum(schema);
+  convertAnyTypeToAllTypes(schema);
   injectTypesOfEnum(schema);
 
   preprocessSchemaRecord(schema.definitions, `${schemaPath}/definitions`);
@@ -109,6 +110,13 @@ function convertConstToEnum(schema: JsonSchemaObjectType): void {
   if (schema.const !== undefined) {
     schema.enum = [schema.const];
     delete schema.const;
+  }
+}
+
+function convertAnyTypeToAllTypes(schema: JsonSchemaObjectType): void {
+  console.log('convert anyTypeToAllTypes', {...schema});
+  if (schema.type === undefined) {
+    schema.type = ['array', 'boolean', 'string', 'integer', 'number', 'object'];
   }
 }
 
